@@ -38,6 +38,7 @@ div.timer-bar
   .timer-bar {
     @include position();
     .bar {
+      pointer-events: none;
       @include position(absolute, 0 null 0 0);
       background-color: rgba(0,0,0,.2);
       z-index: 1;

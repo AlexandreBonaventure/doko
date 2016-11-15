@@ -39,7 +39,8 @@
 
     "vue-element-query": "git+ssh://git@host.lichencommunications.com:222/vue-element-query.git#0.0.3",
 
-    "tween.js": "=16.3.5"
+    "tween.js": "=16.3.5",
+    "vue-awesome-swiper": "git://github.com/LichenInc/vue-awesome-swiper"
   },
   "dependencies": {
     "babel-core": "^6.17.0",

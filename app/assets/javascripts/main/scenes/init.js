@@ -68,9 +68,10 @@ function Init(hypeDocument) {
     '/question': {
       state: 'questions-index',
       before: [function (next) {
+        next(false)
         loadQuestions()
           .then(() => Router.setState('question', { id: 1 }))
-          .catch(() => next(false))
+          // .catch(() => )
       }],
       on: [Router.showScene(QuestionScene)],
     },
