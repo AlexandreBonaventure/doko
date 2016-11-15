@@ -23,7 +23,7 @@ module.exports = {
   methods: {
     uploadAudio,
     saveRecord(blob) {
-      const id = (this.router.params.id  % this.ressources.randomQuestions.length) + 1
+      const id = (this.router.params.id % this.ressources.randomQuestions.length) + 1
       this.uploadAudio(blob)
         .then(() => this.setState('question', { id }))
     },
@@ -46,7 +46,7 @@ module.exports = {
 div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :style="{ backgroundColor: backgroundColor }")
   div.questions(v-if="currentQuestion")
     div.question
-      h3 {{ currentQuestion.question }}
+      h3 {{{ currentQuestion.question }}}
       p.description {{{ currentQuestion.description }}}
   vue-record.record(@success="saveRecord")
 
