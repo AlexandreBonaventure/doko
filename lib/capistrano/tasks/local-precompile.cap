@@ -1,0 +1,70 @@
+namespace :deploy do
+
+  namespace :assets do
+    namespace :local do
+      desc "Precompile assets locally"
+      task :precompile do
+        on roles fetch(:assets_roles, 'app') do
+        # on roles fetch(:gulp_roles) do
+          run_locally do
+            # within fetch(:gulp_target_path, '') do
+              options = [ ]
+
+              options << "--gulpfile #{fetch(:gulp_file)}" if fetch(:gulp_file)
+              options << fetch(:gulp_tasks) if fetch(:gulp_tasks)
+              options << fetch(:gulp_flags) if fetch(:gulp_flags)
+
+              with node_env: fetch(:rails_env) do
+                execute fetch(:gulp_executable), options
+              end
+            # end
+          end
+        end
+      end
+      after 'deploy:starting', :precompile
+
+      desc "Rsync local precompiles assets to web servers"
+      task :rsync do
+        on roles fetch(:assets_roles, 'app') do
+          remote_dir = "#{host.user}@#{host.hostname}:#{remote_assets_path}"
+          remote_port = host.port
+
+          run_locally do
+            execute :rsync,
+                    '-a -v',
+                    "--rsh='ssh -p #{remote_port}'",
+                    "#{assets_path}/",
+                    remote_dir
+          end
+        end
+      end
+      after 'deploy:updated', :rsync
+
+      def assets_path
+        File.join('public', fetch(:assets_prefix, 'assets'))
+      end
+
+      def remote_assets_path
+        release_path.join('public', fetch(:assets_prefix, 'assets'))
+      end
+
+      desc "Cleanup"
+      task :cleanup  do
+        on roles fetch(:assets_roles, 'app') do
+          run_locally do
+            options = [ ]
+
+            options << "--gulpfile #{fetch(:gulp_file)}" if fetch(:gulp_file)
+            options << "clean"
+
+            with node_env: fetch(:rails_env) do
+              execute fetch(:gulp_executable), options
+            end
+          end
+        end
+      end
+      after "deploy:finished", :cleanup
+    end
+  end
+
+end

@@ -1,0 +1,38 @@
+{
+  "plugins": ["html", "babel", "import"],
+  "extends": "airbnb/base",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "strict": 0,
+    "semi": [1, "never"],
+    "camelcase": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-underscore-dangle": 0,
+    "babel/generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "babel/array-bracket-spacing": 1,
+    "babel/object-shorthand": 1,
+    "babel/arrow-parens": 1,
+    "babel/no-await-in-loop": 1,
+    "babel/flow-object-type": 1,
+    "babel/func-params-comma-dangle": 1
+  },
+  "settings" : {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "/app/assets/javascripts", "/app/assets/javascripts/main"],
+      }
+    },
+    "import/core-modules": [ "lodash4" ]
+  }
+}

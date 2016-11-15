@@ -1,0 +1,11 @@
+<% async = iconsloader.key?(:async) ? iconsloader[:async] : local_assigns[:async] -%>
+<%- styles = iconsloader[:icons].is_a?(Array) ? iconsloader[:icons].map{ |style| path_to_stylesheet(style) } : ['.svg.data', '.png.data', '.fallback'].map{ |ext| path_to_stylesheet("#{iconsloader[:icons]}#{ext}") } -%>
+<% if async.is_a?(FalseClass) %>
+<script src="<%= javascript_path('icons-loader') %>"></script>
+<script>IconsLoader(<%== styles %>);</script>
+<% elsif async == :modern  %>
+<script>IconsLoaderStyles = <%== styles %>;</script>
+<script async src="<%= javascript_path('icons-loader') %>"></script>
+<% else %>
+<script>IconsLoaderStyles = <%== styles %>;(function(d) {var wf = d.createElement('script'), s = d.scripts[0];wf.src = '<%= javascript_path('icons-loader') %>';s.parentNode.insertBefore(wf, s);})(document);</script>
+<% end %>

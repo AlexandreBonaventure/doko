@@ -1,0 +1,5 @@
+@import "animatewithsass/animate.scss";
+
+@include importOnce('animate-vendor') {
+
+}

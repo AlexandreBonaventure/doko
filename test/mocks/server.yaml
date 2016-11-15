@@ -1,0 +1,20 @@
+- request:
+    url:  /api/questions
+    method: GET
+  response:
+    type: js
+    file: "api/question.js"
+
+- request:
+    url:  /api/files/upload
+    method: POST
+  response:
+    type: js
+    file: "api/file.js"
+
+- request:
+    url:  /api/clients
+    method: POST
+  response:
+    type: js
+    file: "api/new-client.js"

@@ -1,0 +1,32 @@
+default:
+  project: 'grandduc_3jours'
+  git:
+    url: 'git@git.grandducenligne.com:grandduc_3jours'
+  server:
+    user: 'grandduc'
+    port: 222
+    roles: ['web', 'app', 'db']
+  application_dir: '/vol0/www/grandduc/3jours.grandducenligne.com/rails_app'
+  linked_files: ['config/database.yml', 'config/secrets.yml']
+  linked_dirs: ['log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'node_modules', 'public/assets']
+  log_level: :info
+  format: :pretty
+  keep_releases: 5
+  bundle:
+    jobs: 2
+  passenger:
+    passenger_restart_with_touch: true
+  sidekiq:
+    configs: ['default']
+  gulp:
+    tasks: ['dist']
+
+production:
+  server:
+    url: 'server2.grandducenligne.com'
+  env:
+    path: '$HOME/npm/bin:/vol0/local/ruby/bin:$PATH'
+  git:
+    branch: 'master'
+  gulp:
+    flags: '--min'

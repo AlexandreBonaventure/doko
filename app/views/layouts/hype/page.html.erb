@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="<%= I18n.locale.to_s %>" class="page-loading<%= ' wf-loading' if hype_config[:webfontloader].present? %><%= ' icons-loading' if hype_config[:icons].present? %>">
+<head>
+<title>Rallye 2016 | Grand Duc en ligne</title>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<% if hype_config[:sprockets] %>
+  <%- hype_script = "#{hype_path}.hyperesources/#{hype_script_name}_hype_generated_script.js" -%>
+<% else %>
+  <%- hype_script = "/pages/#{hype_path}.hyperesources/#{hype_script_name}_hype_generated_script.js" -%>
+  <%- hype_script += "?#{Assets::HypeDigestManifest.assets[hype_script]}" unless Rails.env.development? -%>
+<% end %>
+<%- scripts = [javascript_path(hype_script)] + hype_config[:cdn] + [hype_config[:vendor], hype_config[:script]].map{ |script| javascript_path(script) } %>
+<% if hype_config[:async] %>
+<%= scripts.map{ |script| "<link rel=\"subresource\" href=\"#{script}\">" }.join("\n").html_safe %>
+<% end %>
+<%= render 'layouts/shared/webfontloader', webfontloader: hype_config[:webfontloader], async: hype_config[:async] if hype_config[:webfontloader].present? -%>
+<%= render 'layouts/shared/icons_loader', iconsloader: hype_config[:iconsloader], async: hype_config[:async] if hype_config[:iconsloader].present? -%>
+<%= render 'layouts/shared/typekit', typekit_id: (hype_config[:typekit] != true && hype_config[:typekit]) if hype_config[:typekit] -%>
+<%= render 'layouts/shared/typography', typography_id: (hype_config[:typography] != true && hype_config[:typography]) if hype_config[:typography] -%>
+<%= stylesheet_link_tag hype_config[:style], media: "all"  %>
+</head>
+<body>
+<%= render partial: hype_config[:loading] if hype_config[:loading].present? -%>
+<div id="<%= hype_script_name %>_hype_container" style="margin:auto;position:relative;width:100%;height:100%;overflow:hidden;" aria-live="polite"></div>
+<%= yield if hype_config[:partial].present? -%>
+<script>"HYPE_eventListeners"in window==!1&&(window.HYPE_eventListeners=Array()),window.HYPE_eventListeners.push({type:"HypeDocumentLoad",callback:function(e,n,t){window.hypeDocument=e}});</script>
+<% if hype_config[:async] %>
+  <%= render 'layouts/shared/script_loader', scripts: scripts, async: hype_config[:async] -%>
+<% else %>
+	<%= scripts.map{ |script| javascript_include_tag script }.join("\n").html_safe %>
+<% end %>
+<%= render 'layouts/shared/google_analytics', async: hype_config[:async], pageview: true, cross_domain: Global.ga[:cross_domain] -%>
+</body>
+</html>

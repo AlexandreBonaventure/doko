@@ -1,0 +1,5 @@
+<%= l(Date.today, :format => :long) %>
+Voici le conseil du jour:
+<%= @data[:titre] %>
+<%= @data[:description] %>
+Cliquez-ici pour découvrir, partager et participer à la conversation : <%= @bulletin.url %>

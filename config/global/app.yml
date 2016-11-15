@@ -1,0 +1,21 @@
+default:
+  project: 'laclasse'
+
+development:
+  host: 'www.lvh.me'
+  port: 3000
+  domain: 'lvh.me'
+  assets:
+    host: 'www.lvh.me:3000'
+
+staging:
+  host: 'laclasse.staging.grandducenligne.com'
+  domain: 'staging.grandducenligne.com'
+  assets:
+    host: 'laclasse.staging.grandducenligne.com'
+
+production:
+  host: 'laclasse.grandducenligne.com'
+  domain: 'grandducenligne.com'
+  assets:
+    host: 'laclasse.grandducenligne.com'

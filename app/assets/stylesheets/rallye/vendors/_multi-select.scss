@@ -1,0 +1,11 @@
+.multiselect__tag {
+  background-color: rgba($action-color, .5);
+}
+.multiselect__tag-icon {
+  &:hover, &:focus {
+    background-color: $action-color;
+  }
+  &:after {
+    color: #fff!important;
+  }
+}

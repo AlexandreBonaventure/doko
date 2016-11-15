@@ -1,0 +1,28 @@
+@import './keen-ui/keen-ui.scss';
+.ui-select-dropdown-icon {
+  display: none;
+}
+.ui-menu.-notrunc {
+  max-width: none;
+}
+.destroybtn {
+  background-color: $dark-gray;
+  color: white;
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  margin-top: 10px;
+}
+// 
+// @import './sortable.scss';
+// @import './datepicker.scss';
+// @import './tooltip.scss';
+
+
+@import './multi-select.scss';
+
+.multiselect__tag ~ .multiselect__input {
+  width: 100%!important;
+  display: block;
+}

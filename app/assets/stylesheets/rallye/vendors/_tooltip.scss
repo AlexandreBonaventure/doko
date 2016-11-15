@@ -1,0 +1,19 @@
+@import "laclasse-enseignant/shared/themes/_themes";
+@import "laclasse-enseignant/dashboard/specifics/_scenes.scss";
+@import "laclasse-enseignant/dashboard/base/project/_variables.scss";
+
+.tooltip.tooltip-clipboard {
+    display: flex!important;
+    align-items: center;
+    position: relative;
+    border-radius: 2px;
+    padding: 0 8px;
+    height: 26px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1;
+    background: black;
+    color: white;
+    z-index: 1;
+    transition: opacity .3s ease;
+}

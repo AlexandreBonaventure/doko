@@ -1,0 +1,10 @@
+@import "laclasse-enseignant/shared/themes/_themes";
+@import "laclasse-enseignant/dashboard/specifics/_scenes.scss";
+@import "laclasse-enseignant/dashboard/base/project/_variables.scss";
+
+.cov-date-monthly {
+  @include themify-background();
+}
+.cov-date-body, .cov-datepicker {
+  font-family: $font-primary!important;
+}

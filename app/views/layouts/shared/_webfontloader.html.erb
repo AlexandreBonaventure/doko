@@ -1,0 +1,10 @@
+<% async = webfontloader.key?(:async) ? webfontloader[:async] : local_assigns[:async] -%>
+<% if async.is_a? FalseClass %>
+<script src="<%= javascript_path('webfontloader/webfontloader') %>"></script>
+<script>WebFont.load(<%== webfontloader[:fonts].to_json %>);</script>
+<% elsif async == :modern %>
+<script>WebFontConfig = <%== webfontloader[:fonts].to_json %>;</script>
+<script async src="<%= javascript_path('webfontloader/webfontloader') %>"></script>
+<% else  %>
+<script>WebFontConfig = <%== webfontloader[:fonts].to_json %>;(function(d) {var wf = d.createElement('script'), s = d.scripts[0];wf.src = '<%= javascript_path('webfontloader/webfontloader') %>';s.parentNode.insertBefore(wf, s);})(document);</script>
+<% end %>
