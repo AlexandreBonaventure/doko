@@ -2,9 +2,12 @@
 import sceneMixin from 'vue/mixins/scene'
 
 import { giveAnswer } from 'store/upload'
+import moment from 'moment'
 
 import vueRecord from '../components/shared/ui/vue-record-tone.vue'
+import timerBar from '../components/shared/ui/timer-bar.vue'
 // import vueAnalyser from '../components/shared/ui/vue-analyser.vue'
+import { MAX_RECORDING_TIME } from 'configs'
 
 module.exports = {
   name: 'QuestionScene',
@@ -13,11 +16,15 @@ module.exports = {
   },
   data() {
     return {
+      isRecording: false,
+      elapsedTime: null,
+      maxTime: MAX_RECORDING_TIME * 1000,
     }
   },
   store: ['ressources', 'router'],
   components: {
     vueRecord,
+    timerBar,
     // vueAnalyser,
   },
   methods: {
@@ -28,6 +35,9 @@ module.exports = {
       this.giveAnswer(blob, id, '1')
         .then(() => this.setState('question', { id: nextId }))
     },
+    setElapsedTime(elapsedTime) {
+      this.elapsedTime = elapsedTime
+    }
   },
   computed: {
     currentQuestion() {
@@ -37,6 +47,9 @@ module.exports = {
     backgroundColor() {
       const colors = ['#FF4A1D', '#FFE100', '#5AC5F8']
       return colors[(this.router.params.id - 1) % colors.length]
+    },
+    formattedElapsedTime() {
+      return moment(this.elapsedTime).format('mm : ss')
     },
   },
 }
@@ -49,7 +62,10 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :sty
     div.question
       h3 {{{ currentQuestion.question }}}
       p.description {{{ currentQuestion.description }}}
-  vue-record.record(@success="saveRecord")
+  timer-bar.recording(v-if="isRecording", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
+    span.elapsedtime {{formattedElapsedTime}}
+    span.recordetiquette REC
+  vue-record.record(@success="saveRecord", @start="isRecording = true",  @stop="isRecording = false" @recording="setElapsedTime")
 
 
 </template>
@@ -79,6 +95,45 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :sty
     }
     .description {
       font-size: rem(20);
+    }
+    .recordetiquette {
+      // background-color: white;
+      // padding: 10px;
+      @include position(absolute, null 0 0 null);
+      margin: 20px;
+      text-indent: 40px;
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        content: "";
+        @include size(20px);
+        transform: translate(-50%,-50%);
+        border-radius: 100%;
+        background: red;
+        animation: blink-animation 1s steps(5, start) infinite;
+      }
+    }
+    .recording {
+      background-color: rgb(54,54,54);
+      padding: 10px;
+      height: 80px;
+      line-height: 80px;
+      @include position(absolute, null 0 0 0);
+      // &:after {
+      //   position: absolute;
+      //   top: 50%;
+      //   left: 20px;
+      //   content: "";
+      //   @include size(20px);
+      //   transform: translate(-50%,-50%);
+      //   border-radius: 100%;
+      //   background: red;
+      //
+      // }
+    }
+    .elapsedtime {
+      color: white;
     }
   }
 

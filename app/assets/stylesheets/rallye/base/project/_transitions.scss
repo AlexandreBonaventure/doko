@@ -1,3 +1,5 @@
+
+
 @include importOnce('project-transitions') {
 
   /* always present */
@@ -50,6 +52,30 @@
   .slideInLeft {@include slideInLeft($duration:350ms);}
   .slideInRight {@include slideInRight($duration:350ms);}
   .slideOutLeft {@include slideOutLeft($duration:350ms);}
+
+  .slideUp-transition {
+
+  }
+  .slideUp-enter {@include slideInUp($duration:350ms);}
+  .slideUp-leave {@include slideOutDown($duration:500ms);}
+
+  .blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+  }
+  @keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }
+  @-webkit-keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }
+  // .slideInBott-enter, .fade-leave {
+  //   opacity: 0;
+  // }
+  // @include makeVueTransition('slideInBottom', 'slideInBottom')
 
 
 }

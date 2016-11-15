@@ -2,19 +2,15 @@
 
   import Tone from 'tone'
   import Recorder from 'recorderjs'
+  import moment from 'moment'
+  import { MAX_RECORDING_TIME } from 'configs'
 
   export default {
     props: {
       options: {
         default() {
           return {
-            type: 'audio',
-            mimeType: 'video/webm',
-            bufferSize: 0,
-            sampleRate: 44100,
-            leftChannel: false,
-            disableLogs: false,
-            // recorderType: webrtcDetectedBrowser === 'edge' ? StereoAudioRecorder : null
+            maxRecordTime: MAX_RECORDING_TIME,
           }
         },
       },
@@ -23,7 +19,14 @@
       return {
         isRecording: false,
         isMicOpen: false,
+        startTime: null,
+        nowTime: null,
       }
+    },
+    computed: {
+      elapsedTime() {
+        return moment(this.nowTime).diff(this.startTime)
+      },
     },
     methods: {
       // CORE
@@ -33,6 +36,8 @@
         this._audioRecorder.record()
         this.isRecording = true
         this.drawWaveform()
+        this._timeout = setTimeout(this.stopRecording, this.options.maxRecordTime * 1000)
+        this.startTime = new Date()
       },
       stopRecording() {
         this.$emit('stop')
@@ -43,6 +48,10 @@
         this.resetWaveform()
         window.cancelAnimationFrame(this._loopId)
         this._loopId = false
+        if(this._timeout) {
+          clearTimeout(this._timeout)
+          this._timeout = null
+        }
       },
       init() {
         this._mic = new Tone.Microphone()
@@ -70,6 +79,8 @@
         context.canvas.height = canvas.clientHeight
 
         const drawLoop = () => {
+          this.nowTime = new Date()
+          this.$emit('recording', this.elapsedTime)
           const canvasWidth = context.canvas.width
           const canvasHeight = context.canvas.height
           this._loopId = requestAnimationFrame(drawLoop)
