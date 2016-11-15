@@ -16,7 +16,7 @@ export default ressources
 
 export async function loadQuestions() {
   ressources.questions = !ressources.questions.length ?
-    await axios.get(`${API_HOST}/api/radio/questions`).then(({ data }) => data)
+    await axios.get(`${API_HOST}/api/v1/exercices/questions.json?t=radio`).then(({ data }) => data)
     : ressources.questions
   ressources.randomQuestions = shuffle(ressources.questions)
   return ressources.questions
