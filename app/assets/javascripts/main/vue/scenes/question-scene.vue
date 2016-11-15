@@ -4,7 +4,7 @@ import sceneMixin from 'vue/mixins/scene'
 import { uploadAudio } from 'store/upload'
 
 import vueRecord from '../components/shared/ui/vue-record-tone.vue'
-import vueAnalyser from '../components/shared/ui/vue-analyser.vue'
+// import vueAnalyser from '../components/shared/ui/vue-analyser.vue'
 
 module.exports = {
   name: 'QuestionScene',
@@ -18,7 +18,7 @@ module.exports = {
   store: ['ressources', 'router'],
   components: {
     vueRecord,
-    vueAnalyser,
+    // vueAnalyser,
   },
   methods: {
     uploadAudio,

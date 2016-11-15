@@ -68,9 +68,6 @@
             "moment",
 
             "vue",
-            "vuex",
-            "vue-element-query",
-            "vue-validator",
 
             "module-loader",
             "data-store",
@@ -96,9 +93,6 @@
             "moment",
 
             "vue",
-            "vuex",
-            "vue-element-query",
-            "vue-validator",
 
             "module-loader",
             "data-store",

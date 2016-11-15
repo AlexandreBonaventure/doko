@@ -126,7 +126,7 @@
 
 <template lang="jade">
 div.vue-recorder
-  button(v-if="isMicOpen", type="button", @click="!isRecording ? startRecording() : stopRecording()")
+  button.btnrecord(v-if="isMicOpen", type="button", @click="!isRecording ? startRecording() : stopRecording()")
     span(v-if="!isRecording") enregistrer
     span(v-else) arreter
   div.waveform
@@ -136,10 +136,27 @@ div.vue-recorder
 
 
 <style lang="scss" scoped>
+  @import "rallye/base/utils/vendors";
+
   .vue-recorder {
     .waveform {
       height: 100%;
       width: 100%;
+    }
+    .btnrecord {
+      @include position(absolute, 50% null null 50%);
+      transform: translate(-50%, -50%);
+      background-color: white;
+      width: 100px;
+      height: 100px;
+      border: none;
+      border-radius: 100%;
+      outline: none;
+      box-shadow: 0px 0px 10px rgba(0,0,0,.23);
+      transition: all .25s ease-in-out;
+      &:hover {
+        @include size(120px);
+      }
     }
     .wavecanvas {
       height: 100%;

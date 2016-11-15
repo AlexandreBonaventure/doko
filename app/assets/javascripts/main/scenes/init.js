@@ -2,6 +2,10 @@
 import Router from 'hype/router'
 import Scene from 'hype/scene'
 
+import ga from 'setup/ga.js'
+
+import micSupport from 'services/mic-support'
+
 import { readyDeffered } from 'services/ready.js'
 
 import store from 'store'
@@ -24,6 +28,8 @@ ModuleLoader.module('RadioPage')
 function Init(hypeDocument) {
   window.HYPE_eventListeners = []
 
+  if (process.env.NODE_ENV === 'production') ga() // insert google tag manager
+
   Router.hype(hypeDocument)
 
   Router.configure({
@@ -39,6 +45,12 @@ function Init(hypeDocument) {
       next()
     }],
   })
+
+  const checkSupportForMic = (...args) => {
+    const next = args.pop()
+    if (!micSupport) Router.setState('no-mic')
+    next()
+  }
 
   const routes = {
     '/': {
@@ -61,6 +73,11 @@ function Init(hypeDocument) {
       on: [Router.showScene(QuestionScene)],
     },
   }
+
+  //checkSupportForMic
+  Object.values(routes).forEach(route => {
+    route.before = [...(route.before || []), checkSupportForMic]
+  })
 
   Router.mount(routes, '/')
       // Router.init()
