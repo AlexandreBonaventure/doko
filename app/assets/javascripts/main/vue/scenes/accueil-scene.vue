@@ -31,9 +31,9 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     Vous choisissez un thème ou un question et vous y répondez en cliquant sur le micro.
     Ensuite, le fichier est envoyé automatiquement sur les serveurs de Dokoma. Des monteurs sonores feront des émissions que vous retrouverez sur ce site et dans différentes plate-formes de diffusion en ligne.
     #[br]
-  button(type="button", @click="setState('questions-index')")
+  button.btncommencer(class="_btn-sound", type="button", @click="setState('questions-index')")
     icon(icon="mic")
-  p.
+  h3.intro
     #[b Allez-y, exprimez-vous.]
 </template>
 
@@ -56,6 +56,9 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
       width: 80%;
       font-size: rem(40);
       @include bounceIn();
+    }
+    .btncommencer {
+      margin: 100px 0;
     }
     .description {
       white-space: pre-line;

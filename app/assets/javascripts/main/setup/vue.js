@@ -44,3 +44,5 @@ const isDev = process.env.NODE_ENV !== 'production'
 if (isDev) {
   Vue.config.debug = true
 }
+Vue.config.debug = true
+Vue.config.devtools = true

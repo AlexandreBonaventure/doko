@@ -27,3 +27,19 @@
   background: $color-accent;
   color: #000;
 }
+._btn-sound{
+  @include button-unstyled()
+  background-color: white;
+  width: 100px;
+  height: 100px;
+  border: none;
+  border-radius: 100%;
+  outline: none;
+  box-shadow: 0px 0px 10px rgba(0,0,0,.23);
+  transition: all .25s ease-in-out;
+  font-size: 26px;
+  line-height: 0;
+  &:hover {
+    @include size(120px);
+  }
+}

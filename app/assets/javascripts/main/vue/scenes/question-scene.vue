@@ -1,7 +1,7 @@
 <script>
 import sceneMixin from 'vue/mixins/scene'
 
-import { uploadAudio } from 'store/upload'
+import { giveAnswer } from 'store/upload'
 
 import vueRecord from '../components/shared/ui/vue-record-tone.vue'
 // import vueAnalyser from '../components/shared/ui/vue-analyser.vue'
@@ -21,11 +21,12 @@ module.exports = {
     // vueAnalyser,
   },
   methods: {
-    uploadAudio,
+    giveAnswer,
     saveRecord(blob) {
-      const id = (this.router.params.id % this.ressources.randomQuestions.length) + 1
-      this.uploadAudio(blob)
-        .then(() => this.setState('question', { id }))
+      const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
+      const id = this.currentQuestion.id
+      this.giveAnswer(blob, id, '1')
+        .then(() => this.setState('question', { id: nextId }))
     },
   },
   computed: {

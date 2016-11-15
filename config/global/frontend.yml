@@ -7,5 +7,5 @@ development:
 
 production:
   <<: *default
-  API_HOST: 'http://radio.dokoma.com'
+  API_HOST: 'http://plus.dokoma.com'
   PRODUCTION_HOST: 'https://radio.dokoma.com'

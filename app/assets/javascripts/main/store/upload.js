@@ -11,9 +11,10 @@ const API_HOST = process.env.API_HOST
 
 
 // ACTIONS
-export async function uploadAudio(blob) {
+export async function giveAnswer(blob, question_id, user_id) {
   const postData = new FormData()
-  postData.append('audio', blob)
-  postData.append('video', {})
-  await axios.post(`${API_HOST}/radio/messages/upload`, postData).then(({ data }) => data)
+  postData.append('reponse[fichier]', blob)
+  postData.append('reponse[user_uid]', user_id)
+  postData.append('reponse[question_id]', question_id)
+  await axios.post(`${API_HOST}/api/v1/exercices/reponses`, postData).then(({ data }) => data)
 }

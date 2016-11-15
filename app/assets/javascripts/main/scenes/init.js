@@ -20,6 +20,10 @@ const QuestionScene = Scene.new('question', {
   component: require('vue/scenes/question-scene.vue'),
   store,
 })
+const UnsupportedScene = Scene.new('unsupported', {
+  // component: require('vue/scenes/question-scene.vue'),
+  // store,
+})
 
 ModuleLoader.module('RadioPage')
   .register('AccueilScene', AccueilScene)
@@ -32,6 +36,16 @@ function Init(hypeDocument) {
 
   Router.hype(hypeDocument)
 
+  const checkSupportForMic = (...args) => {
+    const next = args.pop()
+    if (!micSupport) {
+      next(false)
+      Router.setState('unsupported')
+    } else {
+      next()
+    }
+  }
+
   Router.configure({
     async: true,
     notfound: 'intro',
@@ -43,14 +57,8 @@ function Init(hypeDocument) {
       const params = Router.getRouteParams()
       store.router = { state, path, queryParams, params }
       next()
-    }],
+    }, checkSupportForMic],
   })
-
-  const checkSupportForMic = (...args) => {
-    const next = args.pop()
-    if (!micSupport) Router.setState('no-mic')
-    next()
-  }
 
   const routes = {
     '/': {
@@ -59,10 +67,12 @@ function Init(hypeDocument) {
     },
     '/question': {
       state: 'questions-index',
-      on: [function () {
+      before: [function (next) {
         loadQuestions()
           .then(() => Router.setState('question', { id: 1 }))
+          .catch(() => next(false))
       }],
+      on: [Router.showScene(QuestionScene)],
     },
     '/question/:id': {
       state: 'question',
@@ -72,12 +82,16 @@ function Init(hypeDocument) {
       }],
       on: [Router.showScene(QuestionScene)],
     },
+    '/unsupported': {
+      state: 'unsupported',
+      on: [Router.showScene(UnsupportedScene)],
+    },
   }
 
   //checkSupportForMic
-  Object.values(routes).forEach(route => {
-    route.before = [...(route.before || []), checkSupportForMic]
-  })
+  // Object.values(routes).forEach(route => {
+  //   route.before = [...(route.before || []), checkSupportForMic]
+  // })
 
   Router.mount(routes, '/')
       // Router.init()

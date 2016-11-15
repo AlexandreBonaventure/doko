@@ -126,9 +126,11 @@
 
 <template lang="jade">
 div.vue-recorder
-  button.btnrecord(v-if="isMicOpen", type="button", @click="!isRecording ? startRecording() : stopRecording()")
-    span(v-if="!isRecording") enregistrer
-    span(v-else) arreter
+  button.btnrecord(class="_btn-sound", v-if="isMicOpen", type="button", @click="!isRecording ? startRecording() : stopRecording()")
+    icon(icon="mic")
+
+    //- span(v-if="!isRecording") enregistrer
+    //- span(v-else) arreter
   div.waveform
     canvas.wavecanvas(v-el:canvas)
 
@@ -146,17 +148,6 @@ div.vue-recorder
     .btnrecord {
       @include position(absolute, 50% null null 50%);
       transform: translate(-50%, -50%);
-      background-color: white;
-      width: 100px;
-      height: 100px;
-      border: none;
-      border-radius: 100%;
-      outline: none;
-      box-shadow: 0px 0px 10px rgba(0,0,0,.23);
-      transition: all .25s ease-in-out;
-      &:hover {
-        @include size(120px);
-      }
     }
     .wavecanvas {
       height: 100%;
