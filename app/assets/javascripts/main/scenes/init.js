@@ -32,12 +32,22 @@ const SignupScene = Scene.new('signup', {
   component: require('vue/scenes/signup-scene.vue'),
   store,
 })
+const DiffusionsIndexScene = Scene.new('diffusions-index', {
+  component: require('vue/scenes/diffusions-index-scene.vue'),
+  store,
+})
+const DiffusionsShowScene = Scene.new('diffusions-show', {
+  component: require('vue/scenes/diffusions-show-scene.vue'),
+  store,
+})
 
 ModuleLoader.module('RadioPage')
   .register('AccueilScene', AccueilScene)
   .register('QuestionScene', QuestionScene)
   .register('QuestionsIndexScene', QuestionsIndexScene)
   .register('SignupScene', SignupScene)
+  .register('DiffusionsIndexScene', DiffusionsIndexScene)
+  .register('DiffusionsShowScene', DiffusionsShowScene)
 
 function Init(hypeDocument) {
   window.HYPE_eventListeners = []
@@ -114,6 +124,14 @@ function Init(hypeDocument) {
     '/signup': {
       state: 'signup',
       on: [Router.showScene(SignupScene)],
+    },
+    '/listen': {
+      state: 'diffusions-index',
+      on: [Router.showScene(DiffusionsIndexScene)],
+    },
+    '/listen/:id': {
+      state: 'diffusions-show',
+      on: [Router.showScene(DiffusionsShowScene)],
     },
     '/unsupported': {
       state: 'unsupported',

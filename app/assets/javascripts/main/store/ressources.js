@@ -1,15 +1,19 @@
 /* eslint-disable key-spacing*/
 import axios from 'axios'
 import { shuffle } from 'lodash'
-const PLUS_HOST = process.env.PLUS_HOST
-const API_HOST = process.env.API_HOST
+
 import Question from 'models/question'
 import Usager from 'models/usager'
+import Diffusion from 'models/diffusion'
+
+const PLUS_HOST = process.env.PLUS_HOST
+const API_HOST = process.env.API_HOST
 
 const ressources = {
   questions: [],
   randomQuestions: [],
   usager: null,
+  diffusions: [],
 }
 export default ressources
 
@@ -17,7 +21,7 @@ export default ressources
 
 
 // ACTIONS
-
+// QUESTIONS
 export async function loadQuestions() {
   ressources.questions = !ressources.questions.length ?
     await axios.get(`${PLUS_HOST}/api/v1/exercices/questions.json?t=radio`)
@@ -31,6 +35,7 @@ export async function loadQuestions() {
   return ressources.questions
 }
 
+// USAGER
 export async function createUsager() {
   if (!ressources.usager) {
     ressources.usager = await Usager.create()
@@ -39,4 +44,19 @@ export async function createUsager() {
 }
 export async function updateUsager(data) {
   return ressources.usager = await Usager.update(ressources.usager.id, data)
+}
+
+// USAGER
+export async function loadAllDiffusions() {
+  if (!ressources.diffusions.length) {
+    ressources.diffusions = await Diffusion.findAll()
+  }
+  return ressources.diffusions
+}
+// USAGER
+export async function loadDiffusion(id) {
+  if (!Diffusion.get(id)) {
+    ressources.diffusions = await Diffusion.find(id)
+  }
+  return Diffusion.get(id)
 }
