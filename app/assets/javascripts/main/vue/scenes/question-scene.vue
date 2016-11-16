@@ -44,7 +44,8 @@ module.exports = {
       this.isSavingReponse = true
       // const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
       const id = this.currentQuestion.id
-      this.giveAnswer(blob, id, '1')
+      const user_id = this.ressources.usager.id
+      this.giveAnswer(blob, id, user_id)
         .then(() => {
           this.isSavingReponse = false
           this.blob = null

@@ -9,7 +9,7 @@ import micSupport from 'services/mic-support'
 import { readyDeffered } from 'services/ready.js'
 
 import store from 'store'
-import { loadQuestions } from 'store/ressources'
+import { loadQuestions, createUsager } from 'store/ressources'
 
 // Scenes
 const AccueilScene = Scene.new('accueil', {
@@ -28,11 +28,16 @@ const UnsupportedScene = Scene.new('unsupported', {
   // component: require('vue/scenes/question-scene.vue'),
   // store,
 })
+const SignupScene = Scene.new('signup', {
+  component: require('vue/scenes/signup-scene.vue'),
+  store,
+})
 
 ModuleLoader.module('RadioPage')
   .register('AccueilScene', AccueilScene)
   .register('QuestionScene', QuestionScene)
   .register('QuestionsIndexScene', QuestionsIndexScene)
+  .register('SignupScene', SignupScene)
 
 function Init(hypeDocument) {
   window.HYPE_eventListeners = []
@@ -50,19 +55,29 @@ function Init(hypeDocument) {
       next()
     }
   }
+  const checkCreateUsager = (...args) => {
+    const next = args.pop()
+    createUsager()
+      .then(() => next())
+      .catch(() => next(false))
+  }
 
   Router.configure({
     async: true,
     notfound: 'intro',
-    before: [(...args) => {
-      const next = args.pop()
-      const state = Router.getCurrentState()
-      const path = Router.getPath()
-      const queryParams = Router.getQueryParams()
-      const params = Router.getRouteParams()
-      store.router = { state, path, queryParams, params }
-      next()
-    }, checkSupportForMic],
+    before: [
+      (...args) => {
+        const next = args.pop()
+        const state = Router.getCurrentState()
+        const path = Router.getPath()
+        const queryParams = Router.getQueryParams()
+        const params = Router.getRouteParams()
+        store.router = { state, path, queryParams, params }
+        next()
+      },
+      checkSupportForMic,
+      checkCreateUsager,
+    ],
   })
 
   const routes = {
@@ -95,6 +110,10 @@ function Init(hypeDocument) {
         next()
       }],
       on: [Router.showScene(QuestionScene)],
+    },
+    '/signup': {
+      state: 'signup',
+      on: [Router.showScene(SignupScene)],
     },
     '/unsupported': {
       state: 'unsupported',

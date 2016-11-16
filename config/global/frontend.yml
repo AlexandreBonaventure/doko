@@ -3,9 +3,11 @@ default: &default
 development:
   <<: *default
   API_HOST: 'http://localhost:3000'
+  PLUS_HOST: 'http://localhost:5000'
   PRODUCTION_HOST: 'https://radio.dokoma.com'
 
 production:
   <<: *default
-  API_HOST: 'https://plus.dokoma.com'
+  API_HOST: 'https://radio.dokoma.com'
+  PLUS_HOST: 'https://plus.dokoma.com'
   PRODUCTION_HOST: 'https://radio.dokoma.com'
