@@ -133,6 +133,7 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
 
     .slide {
       height: 100vh;
+      overflow: hidden;
       @include position(absolute, 0 0 0 0);
     }
     .slideitem {
