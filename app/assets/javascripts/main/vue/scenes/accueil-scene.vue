@@ -1,5 +1,6 @@
 <script>
 import sceneMixin from 'vue/mixins/scene'
+// import tooltip from 'vue/components/shared/ui/tooltip.vue'
 
 module.exports = {
   name: 'AccueilScene',
@@ -8,15 +9,21 @@ module.exports = {
   mixins: [sceneMixin],
   data() {
     return {
+      isTooltipVisible: false,
     }
   },
   components: {
-
+    // tooltip,
   },
   methods: {
   },
   computed: {
 
+  },
+  ready() {
+    setTimeout(() => {
+      this.isTooltipVisible = true
+    }, 200)
   },
 }
 </script>
@@ -31,10 +38,11 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     Vous choisissez un thème ou un question et vous y répondez en cliquant sur le micro.
     Ensuite, le fichier est envoyé automatiquement sur les serveurs de Dokoma. Des monteurs sonores feront des émissions que vous retrouverez sur ce site et dans différentes plate-formes de diffusion en ligne.
     #[br]
-  button.btncommencer(class="_btn-sound", type="button", @click="setState('questions-index')")
-    icon(icon="mic")
-  h3.intro
-    #[b Allez-y, exprimez-vous.]
+  div.buttondiv
+    //- tooltip(:visible="isTooltipVisible", :content="'Allez-y, exprimez-vous.'")
+    button.btncommencer(class="_btn-sound", type="button", @click="setState('questions-random-record')")
+      icon(icon="mic")
+
 </template>
 
 <style lang="scss" scoped>
@@ -57,7 +65,10 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
       font-size: rem(40);
       @include bounceIn();
     }
-    .btncommencer {
+    // .btncommencer {
+    //   margin: 100px 0;
+    // }
+    .buttondiv {
       margin: 100px 0;
     }
     .description {

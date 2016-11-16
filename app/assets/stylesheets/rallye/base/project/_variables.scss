@@ -5,7 +5,7 @@
 
 $font-primary: "Gotham-Rd", sans-serif;
 // $font-primary-bold: "Vitesse SSm A", "Vitesse SSm B", sans-serif;
-$font-secondary: "Gotham A", "Gotham B", sans-serif;
+$font-secondary: "Work Sans", sans-serif;
 // $font-secondary-bold: $font-marianina-bold, sans-serif;
 $font-primary-weight-bold: 800;
 $font-primary-weight-medium: 500;
@@ -32,17 +32,18 @@ $small-spacing: $base-spacing / 2;
 $base-z-index: 0;
 
 // Colors
-$blue: #477dca;
-$green: #4EB2A7;
-$rose: #ed174c;
+$orange: #FF4A1D;
+$yellow: #FFE100;
+$blue: #5AC5F8;
+
 $dark-gray: #333;
 $medium-gray: #999;
 $light-gray: #ddd;
 
 // Font Colors
 $base-font-color: $dark-gray;
-$action-color: $green;
-$color-accent: $green;
+$action-color: $orange;
+$color-accent: $orange;
 
 // Border
 $base-border-color: $light-gray;

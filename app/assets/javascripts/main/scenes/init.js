@@ -20,6 +20,10 @@ const QuestionScene = Scene.new('question', {
   component: require('vue/scenes/question-scene.vue'),
   store,
 })
+const QuestionsIndexScene = Scene.new('questions-index', {
+  component: require('vue/scenes/questions-index-scene.vue'),
+  store,
+})
 const UnsupportedScene = Scene.new('unsupported', {
   // component: require('vue/scenes/question-scene.vue'),
   // store,
@@ -28,6 +32,7 @@ const UnsupportedScene = Scene.new('unsupported', {
 ModuleLoader.module('RadioPage')
   .register('AccueilScene', AccueilScene)
   .register('QuestionScene', QuestionScene)
+  .register('QuestionsIndexScene', QuestionsIndexScene)
 
 function Init(hypeDocument) {
   window.HYPE_eventListeners = []
@@ -65,18 +70,26 @@ function Init(hypeDocument) {
       state: 'intro',
       on: [Router.showScene(AccueilScene)],
     },
-    '/question': {
+    '/questions': {
       state: 'questions-index',
+      before: [function (next) {
+        loadQuestions()
+          .then(() => next())
+      }],
+      on: [Router.showScene(QuestionsIndexScene)],
+    },
+    '/questions/random/record': {
+      state: 'questions-random-record',
       before: [function (next) {
         next(false)
         loadQuestions()
-          .then(() => Router.setState('question', { id: 1 }))
+          .then((questions) => Router.setState('question-record', { id: store.ressources.randomQuestions[0].id }))
           // .catch(() => )
       }],
       on: [Router.showScene(QuestionScene)],
     },
-    '/question/:id': {
-      state: 'question',
+    '/questions/:id/record': {
+      state: 'question-record',
       before: [function(id, next) {
         if (!store.ressources.questions.length) Router.setState('questions-index')
         next()
@@ -89,13 +102,8 @@ function Init(hypeDocument) {
     },
   }
 
-  //checkSupportForMic
-  // Object.values(routes).forEach(route => {
-  //   route.before = [...(route.before || []), checkSupportForMic]
-  // })
 
   Router.mount(routes, '/')
-      // Router.init()
 
   Router.init('/')
   readyDeffered.resolve()

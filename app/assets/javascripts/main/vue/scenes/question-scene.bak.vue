@@ -10,8 +10,6 @@ import timerBar from '../components/shared/ui/timer-bar.vue'
 import { MAX_RECORDING_TIME } from 'configs'
 import { swiper as Swipe, swiperSlide as SwipeItem } from 'vue-awesome-swiper'
 
-import Question from 'models/question'
-
 module.exports = {
   name: 'QuestionScene',
   mixins: [sceneMixin],
@@ -42,13 +40,13 @@ module.exports = {
     },
     saveRecord(blob) {
       this.isSavingReponse = true
-      // const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
+      const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
       const id = this.currentQuestion.id
       this.giveAnswer(blob, id, '1')
         .then(() => {
           this.isSavingReponse = false
           this.blob = null
-          this.setState('questions-random-record')
+          this.setState('question', { id: nextId })
         })
     },
     setElapsedTime(elapsedTime) {
@@ -57,13 +55,12 @@ module.exports = {
   },
   computed: {
     currentQuestion() {
-      if (!this.ressources.questions.length || !this.router.params.id) return
-      return Question.get(this.router.params.id)
-      // return this.ressources.randomQuestions[this.router.params.id - 1]
+      if (!this.ressources.questions.length) return
+      return this.ressources.randomQuestions[this.router.params.id - 1]
     },
     backgroundColor() {
       const colors = ['#FF4A1D', '#FFE100', '#5AC5F8']
-      return colors[(this.currentQuestion.position - 1) % colors.length]
+      return colors[(this.router.params.id - 1) % colors.length]
     },
     formattedElapsedTime() {
       return moment(this.elapsedTime).format('mm : ss')
@@ -87,16 +84,14 @@ module.exports = {
         // nextButton:'.swiper-button-next',
         // scrollbar:'.swiper-scrollbar',
         // mousewheelControl : true,
-        observeParents: true,
+        observeParents:true,
       }
     },
   },
   watch: {
-    router: {
-      handler({ params: { id } }) {
-        if (id) this.$nextTick(() => this.$refs.swiper.swiper.slideTo(this.currentQuestion.position - 1))
-      },
-    },
+    router({ params: { id } }) {
+      if (id) this.$refs.swiper.swiper.slideTo(id - 1)
+    }
   },
 }
 </script>
@@ -104,13 +99,8 @@ module.exports = {
 <template lang="jade">
 
 div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
-  swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
-    swipe-item.slideitem(:style="{ backgroundColor: backgroundColor }")
-      div.questions
-        div.question
-          h3 {{{ currentQuestion.question }}}
-          p.description {{{ currentQuestion.description }}}
-    swipe-item.slideitem(v-for="currentQuestion in ressources.questions", :style="{ backgroundColor: backgroundColor }")
+  swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper)
+    swipe-item.slideitem(v-for="currentQuestion in ressources.randomQuestions", :style="{ backgroundColor: backgroundColor }")
       div.questions
         div.question
           h3 {{{ currentQuestion.question }}}
