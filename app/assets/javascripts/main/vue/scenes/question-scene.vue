@@ -76,7 +76,8 @@ module.exports = {
         autoplay: false,
         direction : 'vertical',
         speed: 700,
-        effect: 'flip',
+        loop: true,
+        effect: 'slide',
         parallax: true,
         // height: '40vh',
         // grabCursor : true,
@@ -106,15 +107,15 @@ module.exports = {
 
 div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
   swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
-    swipe-item.slideitem(:style="{ backgroundColor: backgroundColor }")
+    swipe-item.slideitem(:style=" {} || { backgroundColor: backgroundColor }")
       div.questions
         div.question
-          h3 {{{ currentQuestion.question }}}
+          h3.titre {{{ currentQuestion.question }}}
           p.description {{{ currentQuestion.description }}}
-    swipe-item.slideitem(v-for="currentQuestion in ressources.questions", :style="{ backgroundColor: backgroundColor }")
+    swipe-item.slideitem(v-for="currentQuestion in ressources.questions", :style="{ {} || backgroundColor: backgroundColor }")
       div.questions
         div.question
-          h3 {{{ currentQuestion.question }}}
+          h3.titre {{{ currentQuestion.question }}}
           p.description {{{ currentQuestion.description }}}
 
   timer-bar.recording(v-if!="isRecording || blob", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
@@ -124,6 +125,8 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     div.infos(v-else)
       button(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
   vue-record.record(@success="registerBlob", @start="isRecording = true",  @stop="", @recording="setElapsedTime")
+  .background
+    canvas(v-el:canvas)
 
 
 </template>
@@ -223,6 +226,18 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
       height: 100%;
       align-items: center;
       justify-content: space-between;
+    }
+  }
+
+</style>
+<style lang="scss">
+  @import "rallye/base/utils/vendors";
+  @import "rallye/base/project/mixins";
+  @import "rallye/base/project/variables";
+
+  .question-scene {
+    .titre {
+      font-family: $font-secondary;
     }
   }
 

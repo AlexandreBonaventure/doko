@@ -17,6 +17,8 @@ module.exports = {
 div.signup-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
   form(novalidate, @submit.prevent="updateUsager({ prenom: 'Alex', nom: 'Geissmann', email: 'sw@sm.com'})")
     input(type="submit" value="ok")
+  div.background
+    canvas(v-el:canvas)
 
 </template>
 

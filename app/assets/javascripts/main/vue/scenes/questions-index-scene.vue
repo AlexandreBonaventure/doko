@@ -28,6 +28,8 @@ div.questions-index-scene.wrapper_scene(v-element-query, min-width="900px 1400px
   ul.questionslist
     li.question(v-for="question in questions")
       question-item.questionitem(:question="question")
+  div.background
+    canvas(v-el:canvas)
 
 </template>
 
@@ -41,7 +43,7 @@ div.questions-index-scene.wrapper_scene(v-element-query, min-width="900px 1400px
     padding-left: 210px;
     padding-top: 90px;
     .titre {
-      font-size: 1.5em;
+      font-size: rem(40);
       font-family: $font-secondary;
     }
     .question {
@@ -52,7 +54,7 @@ div.questions-index-scene.wrapper_scene(v-element-query, min-width="900px 1400px
       border-left: 4px solid #fff;
     }
     .question-item {
-      color: $orange;
+      color: #000;
       &:hover {
         color: white;
       }

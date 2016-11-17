@@ -2,6 +2,7 @@
 import sceneMixin from 'vue/mixins/scene'
 
 import { loadAllDiffusions } from 'store/ressources'
+import diffusionItem from './diffusions-index-scene/diffusion-item.vue'
 
 module.exports = {
   name: 'DiffusionScene',
@@ -11,6 +12,9 @@ module.exports = {
   },
   methods: {
     loadAllDiffusions,
+  },
+  components: {
+    diffusionItem,
   },
   created() {
     this.loadAllDiffusions()
@@ -22,15 +26,18 @@ module.exports = {
 
 div.diffusion-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
   div.container
-    h1 Diffusions
-    ul
+    h3.titre Diffusions
+    ul.list
       li(v-for="diffusion in diffusions")
-        a(class="is-flex-center", :href="getUrlFromState('diffusions-show', { id: diffusion.id })")
-          div.is-flex-1
-            h3 {{{diffusion.titre}}}
-            p {{{diffusion.description}}}
-          span.minutage {{diffusion.formatted_temps}}
+        diffusion-item.item(:diffusion="diffusion")
+        //- a(class="is-flex-center", :href="getUrlFromState('diffusions-show', { id: diffusion.id })")
+        //-   div.is-flex-1
+        //-     h3.titre {{{diffusion.titre}}}
+        //-     p {{{diffusion.description}}}
+        //-   span.minutage {{diffusion.formatted_temps}}
       //- {{diffusion.url}}
+  div.background
+    canvas(v-el:canvas)
 
 </template>
 
@@ -41,16 +48,28 @@ div.diffusion-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
   @import "animatewithsass/animate.scss";
 
   .diffusion-scene {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
     font-family: $font-primary;
     padding-bottom: 20vh;
     .container {
       width: 80%;
     }
-
+    padding-left: 210px;
+    padding-top: 90px;
+    .titre {
+      font-size: rem(40);
+      font-family: $font-secondary;
+    }
+    .list {
+      padding-left: 50px;
+      border-left: 4px solid #fff;
+    }
+    .item {
+      margin-bottom: 10px;
+    }
   }
 
 </style>

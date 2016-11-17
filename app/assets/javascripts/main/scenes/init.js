@@ -8,6 +8,7 @@ import micSupport from 'services/mic-support'
 
 import { readyDeffered } from 'services/ready.js'
 
+import EventBus from 'services/eventbus'
 import store from 'store'
 import { loadQuestions, createUsager } from 'store/ressources'
 
@@ -88,6 +89,9 @@ function Init(hypeDocument) {
       checkSupportForMic,
       checkCreateUsager,
     ],
+    on: [() => {
+      EventBus.$emit('route:changed')
+    }]
   })
 
   const routes = {

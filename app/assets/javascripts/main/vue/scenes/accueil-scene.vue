@@ -24,13 +24,14 @@ module.exports = {
     setTimeout(() => {
       this.isTooltipVisible = true
     }, 200)
+
   },
 }
 </script>
 
 <template lang="jade">
 
-div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
+div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :on-resize="onResize")
   h3.intro.
     Bienvenue dans la Radio Dokoma.
     Une radio étudiante pour tous les étudiants.
@@ -42,6 +43,8 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     //- tooltip(:visible="isTooltipVisible", :content="'Allez-y, exprimez-vous.'")
     button.btncommencer(class="_btn-sound", type="button", @click="setState('questions-random-record')")
       icon(icon="mic")
+  div.background
+    canvas(v-el:canvas)
 
 </template>
 
@@ -59,6 +62,7 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     font-family: $font-primary;
     padding-bottom: 20vh;
     .intro {
+      font-family: $font-secondary;
       white-space: pre-line;
       text-align: center;
       width: 80%;

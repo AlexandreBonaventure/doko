@@ -40,8 +40,11 @@ module.exports = {
 
 div.diffusion-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
   div.container(v-if="diffusion")
-    h1 {{ diffusion.titre }}
+    h1.titre {{{ diffusion.titre }}}
+    p.description {{{ diffusion.description }}}
     speak(:audio-srcs='sources')
+  div.background
+    canvas(v-el:canvas)
 
 </template>
 
@@ -60,6 +63,9 @@ div.diffusion-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     padding-bottom: 20vh;
     .container {
       width: 80%;
+    }
+    .titre {
+      font-family: $font-secondary;
     }
 
   }
