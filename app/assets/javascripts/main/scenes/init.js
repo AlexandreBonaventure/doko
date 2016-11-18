@@ -60,11 +60,9 @@ function Init(hypeDocument) {
   const checkSupportForMic = (...args) => {
     const next = args.pop()
     if (!micSupport) {
-      next(false)
-      Router.setState('unsupported')
-    } else {
-      next()
+      store.config.isMicSupported = false
     }
+    next()
   }
   const checkCreateUsager = (...args) => {
     const next = args.pop()

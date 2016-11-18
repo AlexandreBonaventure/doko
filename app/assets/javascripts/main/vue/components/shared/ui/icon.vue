@@ -13,6 +13,8 @@
         type: String,
         default: '#000',
       },
+      noColor: {
+      },
       size: {
         type: Number,
         coerce(val) {
@@ -65,7 +67,7 @@
           maxWidth: this.computed_width,
           maxHeight: this.computed_height,
           height: browserDetect.matchIe(11) ? this.computed_height : null,
-          fill: this.color,
+          ...(this.noColor ? { fill: this.color } : {}),
           transform: `rotate(${this.rotation}) scale(${this.scale})`,
         }
       },
@@ -83,7 +85,7 @@
 
 <template lang="jade">
 
-i.icon-ui(v-el:icon, :class="['icon-'+icon]", :style="computedStyle", v-embed-svg, :name="icon")
+i.icon-ui(v-el:icon, :class="['icon-'+icon, noColor ? '-no-color' : '']", :style="computedStyle", v-embed-svg, :name="icon")
 
 </template>
 
@@ -99,10 +101,10 @@ i.icon-ui(v-el:icon, :class="['icon-'+icon]", :style="computedStyle", v-embed-sv
       width: 100%;
       height: 100%;
     }
-    g, path {
-      // display: inline!important; // HACK Illustrator
-      // stroke: none!important; // HACK Illustrator
-      fill: inherit;
+    &:not(.-no-color) {
+      g, path {
+        fill: inherit;
+      }
     }
   }
 </style>

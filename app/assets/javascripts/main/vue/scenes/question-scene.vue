@@ -9,7 +9,7 @@ import timerBar from '../components/shared/ui/timer-bar.vue'
 // import vueAnalyser from '../components/shared/ui/vue-analyser.vue'
 import { MAX_RECORDING_TIME } from 'configs'
 import { swiper as Swipe, swiperSlide as SwipeItem } from 'vue-awesome-swiper'
-
+import noMicsupport from 'vue/components/shared/ui/no-micsupport.vue'
 import Question from 'models/question'
 
 module.exports = {
@@ -27,12 +27,17 @@ module.exports = {
       isFinished: false,
     }
   },
-  store: ['ressources', 'router'],
+  store: {
+    isMicSupported: 'config.isMicSupported',
+    ressources: 'ressources',
+    router: 'router',
+  },
   components: {
     vueRecord,
     timerBar,
     Swipe,
     SwipeItem,
+    noMicsupport,
     // vueAnalyser,
   },
   methods: {
@@ -42,6 +47,7 @@ module.exports = {
       this.blob = blob
     },
     saveRecord(blob) {
+      if (this.isSavingReponse) return
       this.isFinished = false
       this.isSavingReponse = true
       // const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
@@ -108,30 +114,32 @@ module.exports = {
 <template lang="jade">
 
 div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :class="{'-is-finished': isFinished, '-is-recording': isRecording}")
-  button.btnsave(v-if="isFinished", type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+  template(v-if="!isMicSupported")
+    no-micsupport
+  template(v-else)
+    button.btnsave(v-if="isFinished", type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+    swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
+      swipe-item.slideitem(:style=" {} || { backgroundColor: backgroundColor }")
+        div.questions
+          div.question
+            h3.titre {{{ currentQuestion.question }}}
+            p.description {{{ currentQuestion.description }}}
+      swipe-item.slideitem(v-for="currentQuestion in ressources.questions", :style="{} || { backgroundColor: backgroundColor }")
+        div.questions
+          div.question
+            h3.titre {{{ currentQuestion.question }}}
+            p.description {{{ currentQuestion.description }}}
 
-  swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
-    swipe-item.slideitem(:style=" {} || { backgroundColor: backgroundColor }")
-      div.questions
-        div.question
-          h3.titre {{{ currentQuestion.question }}}
-          p.description {{{ currentQuestion.description }}}
-    swipe-item.slideitem(v-for="currentQuestion in ressources.questions", :style="{ {} || backgroundColor: backgroundColor }")
-      div.questions
-        div.question
-          h3.titre {{{ currentQuestion.question }}}
-          p.description {{{ currentQuestion.description }}}
-
-  timer-bar.recording(v-if!="isRecording || blob", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
-    div.infos(v-if="isRecording")
-      span.elapsedtime {{formattedElapsedTime}}
-      span.recordetiquette REC
-    div.infos(v-else)
-      button.btn(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
-      a(:href="getUrlFromState('questions-index')") Revenir aux questions
-  vue-record.record(@success="registerBlob", @start="isRecording = true;isFinished = false",  @stop="isFinished = true", @recording="setElapsedTime")
-  .background
-    canvas(v-el:canvas)
+    timer-bar.recording(v-if!="isRecording || blob", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
+      div.infos(v-if="isRecording")
+        span.elapsedtime {{formattedElapsedTime}}
+        span.recordetiquette REC
+      div.infos(v-else)
+        button.btn(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+        a(:href="getUrlFromState('questions-index')") Revenir aux questions
+    vue-record.record(@success="registerBlob", @start="isRecording = true;isFinished = false",  @stop="isFinished = true", @recording="setElapsedTime")
+    .background
+      canvas(v-el:canvas)
 
 
 </template>

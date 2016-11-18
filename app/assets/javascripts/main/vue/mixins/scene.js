@@ -5,6 +5,6 @@ import backgroundMixin from './background'
 export default {
   mixins: [
     RouterMixin,
-    backgroundMixin,
+    // backgroundMixin,
   ],
 }

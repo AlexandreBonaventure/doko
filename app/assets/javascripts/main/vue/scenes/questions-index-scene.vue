@@ -1,6 +1,7 @@
 <script>
 import sceneMixin from 'vue/mixins/scene'
 import questionItem from './questions-index-scene/question-item.vue'
+import noMicsupport from 'vue/components/shared/ui/no-micsupport.vue'
 
 module.exports = {
   name: 'QuestionsIndexScene',
@@ -8,10 +9,12 @@ module.exports = {
   },
   store: {
     questions: 'ressources.questions',
+    isMicSupported: 'config.isMicSupported',
   },
   mixins: [sceneMixin],
   components: {
     questionItem,
+    noMicsupport,
   },
   methods: {
   },
@@ -24,12 +27,15 @@ module.exports = {
 <template lang="jade">
 
 div.questions-index-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
-  h3.titre Questions
-  ul.questionslist
-    li.question(v-for="question in questions")
-      question-item.questionitem(:question="question")
-  div.background
-    canvas(v-el:canvas)
+  template(v-if="!isMicSupported")
+    no-micsupport
+  template(v-else)
+    h3.titre Questions
+    ul.questionslist
+      li.question(v-for="question in questions")
+        question-item.questionitem(:question="question")
+    div.background
+      canvas(v-el:canvas)
 
 </template>
 

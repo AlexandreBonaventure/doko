@@ -5,4 +5,7 @@ import { default as router } from './router.js'
 export default {
   ressources,
   router,
+  config: {
+    isMicSupported: true,
+  },
 }
