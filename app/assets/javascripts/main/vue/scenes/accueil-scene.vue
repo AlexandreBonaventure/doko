@@ -60,7 +60,7 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :on-r
     justify-content: center;
     align-items: center;
     font-family: $font-primary;
-    padding-bottom: 20vh;
+    padding-top: 20vh;
     .intro {
       font-family: $font-secondary;
       white-space: pre-line;

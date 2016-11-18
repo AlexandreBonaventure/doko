@@ -4,6 +4,8 @@
   import Recorder from 'recorderjs'
   import moment from 'moment'
   import { MAX_RECORDING_TIME } from 'configs'
+  import Wavesurfer from 'wavesurfer.js'
+  import Streamer from 'plugins/streamer'
 
   export default {
     props: {
@@ -33,6 +35,9 @@
       startRecording() {
         this.$emit('start')
         this._mic.start()
+//test
+        // wavesurfer =
+
         this._audioRecorder.record()
         this.isRecording = true
         this.drawWaveform()
@@ -136,12 +141,15 @@
 </script>
 
 <template lang="jade">
-div.vue-recorder
+div.vue-recorder(:class="{'-is-recording': isRecording}")
   button.btnrecord(class="_btn-sound", v-if="isMicOpen", type="button", @click="!isRecording ? startRecording() : stopRecording()")
-    icon(icon="mic")
+    icon(icon="mic", :color="isRecording ? 'white' : 'black'")
 
     //- span(v-if="!isRecording") enregistrer
     //- span(v-else) arreter
+
+  //- div.wavesurf
+  //-   canvas.wavecanvas(v-el:wavesurfer)
   div.waveform
     canvas.wavecanvas(v-el:canvas)
 
@@ -152,6 +160,12 @@ div.vue-recorder
   @import "rallye/base/utils/vendors";
 
   .vue-recorder {
+    &.-is-recording {
+      .btnrecord {
+        background: red;
+        border: 4px solid white;
+      }
+    }
     .waveform {
       height: 100%;
       width: 100%;

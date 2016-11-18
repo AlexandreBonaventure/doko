@@ -24,6 +24,7 @@ module.exports = {
       maxTime: MAX_RECORDING_TIME * 1000,
       blob: null,
       isSavingReponse: false,
+      isFinished: false,
     }
   },
   store: ['ressources', 'router'],
@@ -41,6 +42,7 @@ module.exports = {
       this.blob = blob
     },
     saveRecord(blob) {
+      this.isFinished = false
       this.isSavingReponse = true
       // const nextId = (this.router.params.id % this.ressources.randomQuestions.length) + 1
       const id = this.currentQuestion.id
@@ -105,7 +107,9 @@ module.exports = {
 
 <template lang="jade">
 
-div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
+div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :class="{'-is-finished': isFinished, '-is-recording': isRecording}")
+  button.btnsave(v-if="isFinished", type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+
   swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
     swipe-item.slideitem(:style=" {} || { backgroundColor: backgroundColor }")
       div.questions
@@ -123,8 +127,9 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
       span.elapsedtime {{formattedElapsedTime}}
       span.recordetiquette REC
     div.infos(v-else)
-      button(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
-  vue-record.record(@success="registerBlob", @start="isRecording = true",  @stop="", @recording="setElapsedTime")
+      button.btn(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+      a(:href="getUrlFromState('questions-index')") Revenir aux questions
+  vue-record.record(@success="registerBlob", @start="isRecording = true;isFinished = false",  @stop="isFinished = true", @recording="setElapsedTime")
   .background
     canvas(v-el:canvas)
 
@@ -142,8 +147,40 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
     flex-direction: column;
     justify-content: center;
     align-items: center;
+        overflow-y: hidden;
     font-family: $font-primary;
     padding-bottom: 20vh;
+    .btn, .btnsave {
+      background-color: white;
+      appearance: none;
+      border:none;
+      padding: 10px;
+      font-family: $font-primary;
+      cursor: pointer;
+
+    }
+    .btnsave {
+      @include position(fixed, 50% null null 50%);
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      padding: 20px;
+
+      z-index: 1000;
+    }
+    &.-is-finished {
+      &:after {
+        @include position(fixed, 0 0 0 0);
+        content: "";
+        z-index: 9;
+        background: rgba(0,0,0,.5)
+      }
+      .recording {
+        height: 150px;
+      }
+    }
+    &.-is-recording {
+
+    }
 
     .slide {
       height: 100vh;
@@ -205,6 +242,7 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px")
       color: white;
       height: 80px;
       z-index: 10;
+      transition: height .3s ease-in-out;
       @include position(absolute, null 0 0 0);
       // &:after {
       //   position: absolute;
