@@ -3,6 +3,7 @@ import sceneMixin from 'vue/mixins/scene'
 
 import { giveAnswer } from 'store/upload'
 import moment from 'moment'
+import wave from 'vue/components/shared/ui/wave.vue'
 
 import vueRecord from '../components/shared/ui/vue-record-tone.vue'
 import timerBar from '../components/shared/ui/timer-bar.vue'
@@ -11,6 +12,10 @@ import { MAX_RECORDING_TIME } from 'configs'
 import { swiper as Swipe, swiperSlide as SwipeItem } from 'vue-awesome-swiper'
 import noMicsupport from 'vue/components/shared/ui/no-micsupport.vue'
 import Question from 'models/question'
+import waveform from 'vue/components/shared/ui/waveform.vue'
+
+const audioCtx = new AudioContext()
+let myArrayBuffer = audioCtx.createBuffer(1, MAX_RECORDING_TIME * audioCtx.sampleRate, audioCtx.sampleRate)
 
 module.exports = {
   name: 'QuestionScene',
@@ -25,6 +30,7 @@ module.exports = {
       blob: null,
       isSavingReponse: false,
       isFinished: false,
+      buffer: null,
     }
   },
   store: {
@@ -38,6 +44,8 @@ module.exports = {
     Swipe,
     SwipeItem,
     noMicsupport,
+    waveform,
+    wave,
     // vueAnalyser,
   },
   methods: {
@@ -45,6 +53,7 @@ module.exports = {
     registerBlob(blob) {
       this.isRecording = false
       this.blob = blob
+      this.$refs.buffer.loadBlob(blob)
     },
     saveRecord(blob) {
       if (this.isSavingReponse) return
@@ -59,10 +68,27 @@ module.exports = {
           this.blob = null
           this.setState('questions-random-record')
         })
+      this.$refs.buffer.empty()
+      myArrayBuffer = audioCtx.createBuffer(1, MAX_RECORDING_TIME * audioCtx.sampleRate, audioCtx.sampleRate)
+      // myArrayBuffer.getChannelData(0).set([])
+      this.$refs.buffer.reload()
     },
     setElapsedTime(elapsedTime) {
       this.elapsedTime = elapsedTime
-    }
+    },
+    startRecording() {
+      this.isRecording = true
+      this.isFinished = false
+    },
+    stopRecording() {
+      this.isFinished = true
+    },
+    registerBuffer(buffers) {
+      myArrayBuffer.getChannelData(0).set(buffers[0])
+      this.$refs.buffer.reloadBuffer(myArrayBuffer)
+// buffer
+      this.buffer = myArrayBuffer
+    },
   },
   computed: {
     currentQuestion() {
@@ -117,7 +143,9 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :cla
   template(v-if="!isMicSupported")
     no-micsupport
   template(v-else)
-    button.btnsave(v-if="isFinished", type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+    div.btns(v-if="isFinished")
+      button.btnsave(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+      a.btnsave(:href="getUrlFromState('questions-index')") Revenir aux questions
     swipe.slide.is-full-width(:options="sliderOpts", v-ref:swiper, v-if="currentQuestion")
       swipe-item.slideitem(:style=" {} || { backgroundColor: backgroundColor }")
         div.questions
@@ -130,14 +158,17 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :cla
             h3.titre {{{ currentQuestion.question }}}
             p.description {{{ currentQuestion.description }}}
 
-    timer-bar.recording(v-if!="isRecording || blob", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
+    timer-bar.recording(v-show!="true || isRecording || blob", transition="slideUp", :time="elapsedTime", :max-time="maxTime")
+      //- waveform.streamedwave(:buffer="buffer", v-if="buffer")
+      wave.streamedwave(v-ref:buffer, v-show="true || isRecording || isFinished", :autoplay="false", :autoheight="true", :height="80")
+
       div.infos(v-if="isRecording")
         span.elapsedtime {{formattedElapsedTime}}
         span.recordetiquette REC
       div.infos(v-else)
-        button.btn(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
-        a(:href="getUrlFromState('questions-index')") Revenir aux questions
-    vue-record.record(@success="registerBlob", @start="isRecording = true;isFinished = false",  @stop="isFinished = true", @recording="setElapsedTime")
+        //- button.btn(type="button", @click="saveRecord(blob)") Sauvegarder et passer à la question suivante
+        //- a(:href="getUrlFromState('questions-index')") Revenir aux questions
+    vue-record.record(@gotbuffer="registerBuffer", @success="registerBlob", @start="startRecording",  @stop="stopRecording", @recording="setElapsedTime")
     .background
       canvas(v-el:canvas)
 
@@ -167,13 +198,27 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :cla
       cursor: pointer;
 
     }
-    .btnsave {
+    .btns {
       @include position(fixed, 50% null null 50%);
       transform: translate(-50%, -50%);
       font-size: 24px;
-      padding: 20px;
-
       z-index: 1000;
+    }
+    .btnsave {
+      font-size: 20px;
+      display: block;
+      margin: 10px;
+      padding: 20px;
+      z-index: 1000;
+      text-align: center;
+    }
+    .streamedwave {
+      // @include position(absolute,  0 0 0 0);
+      @include position(absolute,  0 0 null null);
+      position: absolute!important;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
     &.-is-finished {
       &:after {
@@ -183,7 +228,7 @@ div.question-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :cla
         background: rgba(0,0,0,.5)
       }
       .recording {
-        height: 150px;
+        // height: 150px;
       }
     }
     &.-is-recording {

@@ -35,10 +35,17 @@
       startRecording() {
         this.$emit('start')
         this._mic.start()
-//test
-        // wavesurfer =
 
         this._audioRecorder.record()
+
+        //test
+        const audioContext = new AudioContext()
+        this._intervalId = setInterval(() => {
+          this._audioRecorder.getBuffer((buffers) => {
+            this.$emit('gotbuffer', buffers)
+          })
+        }, 500)
+
         this.isRecording = true
         this.drawWaveform()
         this._timeout = setTimeout(this.stopRecording, this.options.maxRecordTime * 1000)
@@ -48,6 +55,10 @@
         this.$emit('stop')
         this._mic.stop()
         this._audioRecorder.stop()
+        if (this._intervalId) clearInterval(this._intervalId)
+        // this._audioRecorder.getBuffer((buffers) => {
+        //   this.$emit('gotbuffer', buffers)
+        // })
         this._audioRecorder.exportWAV(this.doneEncoding)
         this.isRecording = false
         this.resetWaveform()
@@ -75,6 +86,7 @@
       },
       doneEncoding(blob) {
         this.$emit('success', blob)
+        this._audioRecorder.clear()
       },
       drawWaveform() {
         const canvas = this.$els.canvas
@@ -128,6 +140,7 @@
     beforeDestroy() {
       if (this._mic) {
         this.stopRecording()
+        this._audioRecorder.clear()
         this._mic.dispose()
         this._analyser.dispose()
         this._audioRecorder.clear()
