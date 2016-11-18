@@ -16,7 +16,9 @@ module.exports = {
 <template lang="jade">
 
 a.question-item(:href="getUrlFromState('question-record', { id: question.id })")
-  h3.titre {{{question.question}}}
+  h3.titre
+    icon.icon(icon="mic")
+    span {{{question.question}}}
   //- p {{{question.description}}}
 
 </template>
@@ -31,7 +33,23 @@ a.question-item(:href="getUrlFromState('question-record', { id: question.id })")
     .titre {
       font-family: $font-secondary;
       font-size: 1.8em;
+      &:hover {
+        .icon {
+          opacity: 1;
+        }
+      }
+    }
+    .icon {
+      margin-right: 20px;
+      opacity: .5
     }
   }
 
+</style>
+<style lang="scss">
+  .question-item {
+    .titre {
+      p {display: inline-block;}
+    }
+  }
 </style>

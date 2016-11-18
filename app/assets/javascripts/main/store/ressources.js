@@ -1,7 +1,8 @@
 /* eslint-disable key-spacing*/
 import axios from 'axios'
-import { shuffle } from 'lodash'
+import { shuffle, indexBy, chain } from 'lodash'
 
+import { set } from 'vue'
 import Question from 'models/question'
 import Usager from 'models/usager'
 import Diffusion from 'models/diffusion'
@@ -13,7 +14,7 @@ const ressources = {
   questions: [],
   randomQuestions: [],
   usager: null,
-  diffusions: [],
+  diffusions: {},
 }
 export default ressources
 
@@ -50,13 +51,14 @@ export async function updateUsager(data) {
 export async function loadAllDiffusions() {
   if (!ressources.diffusions.length) {
     ressources.diffusions = await Diffusion.findAll()
+      .then(data => chain(data).map((d, i) => ({ ...d, position: i + 1 })).indexBy('id').value())
   }
   return ressources.diffusions
 }
 // USAGER
 export async function loadDiffusion(id) {
   if (!Diffusion.get(id)) {
-    ressources.diffusions = await Diffusion.find(id)
+    set(ressources.diffusions, id, await Diffusion.find(id))
   }
   return Diffusion.get(id)
 }
