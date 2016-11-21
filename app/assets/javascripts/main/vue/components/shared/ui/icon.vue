@@ -85,7 +85,7 @@
 
 <template lang="jade">
 
-i.icon-ui(v-el:icon, :class="['icon-'+icon, noColor ? '-no-color' : '']", :style="computedStyle", v-embed-svg, :name="icon")
+i.icon-ui(:ref="icon", :class="['icon-'+icon, noColor ? '-no-color' : '']", :style="computedStyle", v-embed-svg, :name="icon")
 
 </template>
 

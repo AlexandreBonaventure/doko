@@ -20,10 +20,7 @@ module.exports = {
   computed: {
 
   },
-  ready() {
-    setTimeout(() => {
-      this.isTooltipVisible = true
-    }, 200)
+  mounted() {
 
   },
 }
@@ -31,7 +28,7 @@ module.exports = {
 
 <template lang="jade">
 
-div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :on-resize="onResize")
+div.accueil-scene.wrapper_scene()
   h3.intro.
     Bienvenue dans la Radio Dokoma.
     Une radio étudiante pour tous les étudiants.
@@ -44,7 +41,7 @@ div.accueil-scene.wrapper_scene(v-element-query, min-width="900px 1400px", :on-r
     button.btncommencer(class="_btn-sound", type="button", @click="setState('questions-random-record')")
       icon(icon="mic")
   div.background
-    canvas(v-el:canvas)
+    canvas(:ref="canvas")
 
 </template>
 

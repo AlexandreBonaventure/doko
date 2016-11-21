@@ -7,6 +7,8 @@ import Vue from 'vue'
 /***********
  * PLUGINS *
  ***********/
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 import VueElementQuery from 'vue-element-query'
 Vue.use(VueElementQuery)
 import VueStash from 'vue-stash'

@@ -34,7 +34,8 @@
     "moment": "=2.14.1",
     "recordrtc": "=5.4.0",
 
-    "vue": "=1.0.28",
+    "vue": "=2.0.8",
+    "vue-router": "=2.0.3",
     "vue-stash": "=1.0.0",
 
     "vue-element-query": "git+ssh://git@host.lichencommunications.com:222/vue-element-query.git#0.0.3",
@@ -89,7 +90,7 @@
     "stripify": "=4.0.0",
     "vinyl-buffer": "=1.0.0",
     "vinyl-source-stream": "=1.1.0",
-    "vueify": "=8.3.6",
+    "vueify": "=9.3.0",
     "vueify-insert-css": "^1.0.0",
     "yargs": "=4.3.1"
   },

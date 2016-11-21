@@ -2,6 +2,7 @@
 module.exports = {
   params: ['name'],
   bind: function() {
+    if (!global.IconsLoader) return
     let loadSvg = () => {
       let svg
       if(this._embedsvg_destroy || global.IconsLoader.method != 'svg' || !(svg = global.IconsLoader.icons[this.params.name]))
